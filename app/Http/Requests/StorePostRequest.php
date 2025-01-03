@@ -24,7 +24,8 @@ class StorePostRequest extends FormRequest
     {
         return [
             'title' => 'required|string|min:2|max:1000',
-            'content' => ['required', 'string', new NoHtmlTags]
+            'content' => ['required', 'string', new NoHtmlTags],
+            'image' => 'nullable|image|mimes:png,jpg,jpeg|max:5120',
         ];
     }
 }

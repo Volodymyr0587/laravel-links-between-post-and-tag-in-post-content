@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\StorePostRequest;
-use App\Http\Requests\UpdatePostRequest;
 
 class PostController extends Controller
 {
@@ -32,6 +31,8 @@ class PostController extends Controller
     public function store(StorePostRequest $request)
     {
         $validated = $request->validated();
+
+        $validated['image'] = $this->handleImageUpload($request);
 
         $post = auth()->user()->posts()->create($validated);
 
@@ -65,6 +66,11 @@ class PostController extends Controller
 
         $validated = $request->validated();
 
+        // Обробка зображення
+        if ($request->hasFile('image')) {
+            $validated['image'] = $this->handleImageUpload($request);
+        }
+
         $post->update($validated);
 
         return to_route('posts.index')->with('success', "Post $post->title successfully updated");
@@ -80,5 +86,14 @@ class PostController extends Controller
         $post->delete();
 
         return to_route('posts.index')->with('success', "Post $post->title successfully updated");
+    }
+
+    protected function handleImageUpload($request)
+    {
+        if ($request->hasFile('image')) {
+            return $request->file('image')->store('posts', 'public');
+        }
+
+        return null;
     }
 }
