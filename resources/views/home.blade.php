@@ -962,7 +962,7 @@
                                     <h2 class="text-xl font-semibold text-black ">{{ $post->title }}</h2>
 
                                     <p class="mt-4 text-sm/relaxed">
-                                        {{ Str::limit($post->content, 20) }}
+                                        {{ strip_tags(Str::limit($post->content, 20)) }}
                                     </p>
                                 </div>
 
